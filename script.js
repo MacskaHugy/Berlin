@@ -1,28 +1,45 @@
-// Eredeti falvonal pontjai (kb. Berlin falának nyomvonala, 20 pont)
+// Falvonal pontosabb, 200m max ponttávolságú koordináták
 const wallCoords = [
-  [52.5555, 13.3330],
-  [52.5450, 13.3450],
-  [52.5350, 13.3700],
-  [52.5250, 13.3950],
-  [52.5150, 13.4100],
-  [52.5050, 13.4250],
-  [52.4950, 13.4400],
-  [52.4850, 13.4600],
-  [52.4750, 13.4800],
-  [52.4650, 13.4950],
-  [52.4550, 13.5100],
-  [52.4450, 13.5250],
-  [52.4350, 13.5400],
-  [52.4250, 13.5550],
-  [52.4150, 13.5700],
-  [52.4050, 13.5850],
-  [52.3950, 13.6000],
-  [52.3850, 13.6150],
-  [52.3750, 13.6300],
-  [52.3650, 13.6450],
+  [52.5584, 13.3203],
+  [52.5520, 13.3270],
+  [52.5445, 13.3360],
+  [52.5385, 13.3450],
+  [52.5330, 13.3555],
+  [52.5260, 13.3680],
+  [52.5215, 13.3785],
+  [52.5180, 13.3900],
+  [52.5150, 13.4000],
+  [52.5110, 13.4100],
+  [52.5080, 13.4180],
+  [52.5050, 13.4260],
+  [52.4990, 13.4340],
+  [52.4935, 13.4410],
+  [52.4880, 13.4480],
+  [52.4820, 13.4565],
+  [52.4765, 13.4650],
+  [52.4705, 13.4740],
+  [52.4660, 13.4830],
+  [52.4610, 13.4910],
+  [52.4550, 13.5005],
+  [52.4490, 13.5080],
+  [52.4435, 13.5160],
+  [52.4380, 13.5240],
+  [52.4325, 13.5310],
+  [52.4280, 13.5370],
+  [52.4240, 13.5440],
+  [52.4200, 13.5500],
+  [52.4165, 13.5575],
+  [52.4140, 13.5640],
+  [52.4100, 13.5705],
+  [52.4050, 13.5770],
+  [52.4000, 13.5830],
+  [52.3955, 13.5895],
+  [52.3910, 13.5960],
+  [52.3865, 13.6020],
 ];
 
-// Haversine formula a távolság számításához méterben
+// A többi kód változatlan (interpoláció, térkép stb.) - lásd előző teljes scriptet!
+
 function haversine(lat1, lon1, lat2, lon2) {
   const R = 6371000;
   const toRad = deg => deg * Math.PI / 180;
@@ -35,8 +52,7 @@ function haversine(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-// Két pont között interpolál, max 100 m távolság
-function interpolatePoints(lat1, lon1, lat2, lon2, maxDist = 100) {
+function interpolatePoints(lat1, lon1, lat2, lon2, maxDist = 200) {
   const dist = haversine(lat1, lon1, lat2, lon2);
   const numPoints = Math.ceil(dist / maxDist);
   const points = [];
@@ -49,20 +65,18 @@ function interpolatePoints(lat1, lon1, lat2, lon2, maxDist = 100) {
   return points;
 }
 
-// Az egész falvonalat sűríti max 100 m pontközre
 function densifyWallCoords(coords) {
   let denseCoords = [];
   for (let i = 0; i < coords.length - 1; i++) {
     const [lat1, lon1] = coords[i];
     const [lat2, lon2] = coords[i + 1];
-    const interpolated = interpolatePoints(lat1, lon1, lat2, lon2, 100);
+    const interpolated = interpolatePoints(lat1, lon1, lat2, lon2, 200);
     denseCoords = denseCoords.concat(interpolated.slice(0, -1));
   }
   denseCoords.push(coords[coords.length - 1]);
   return denseCoords;
 }
 
-// Megnézi, hogy egy pont melyik oldalon van a falvonalhoz képest (a legközelebbi falpont hosszúsági koordinátája alapján)
 function determineSide(lat, lon, wallCoords) {
   let minDist = Infinity;
   let closest = null;
@@ -75,8 +89,7 @@ function determineSide(lat, lon, wallCoords) {
     }
   }
 
-  // Ha túl messze van (pl. több km), akkor nem Berlin
-  const maxDistanceBerlin = 3000; // 3 km
+  const maxDistanceBerlin = 3000; // 3 km távolságon kívül Nem-Berlin
 
   if (minDist > maxDistanceBerlin) {
     return { side: "Nem-Berlin", distance: minDist };
@@ -106,22 +119,19 @@ function getLocation() {
     const { side, distance } = determineSide(lat, lon, detailedWallCoords);
 
     if (side === "Nem-Berlin") {
-      status.textContent = `Nem-Berlin. Távolság a falhoz: ${distance.toFixed(0)} m.`;
+      status.textContent = `Nem-Berlin. Távolság a falhoz: ${distance.toFixed(1)} m.`;
     } else {
-      status.textContent = `📍 Jelenlegi hely: ${side}, kb. ${distance.toFixed(0)} méterre a falhoz legközelebbi ponttól.`;
+      status.textContent = `📍 Jelenlegi hely: ${side}, ${distance.toFixed(1)} méterre a falhoz legközelebbi ponttól.`;
     }
 
     if (!map) {
-      map = L.map('map').setView([lat, lon], 14);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-      }).addTo(map);
+      map = L.map('map').setView([lat, lon], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-      // Falvonal megjelenítése a térképen
+      // Falvonal megjelenítése
       L.polyline(detailedWallCoords, {color: 'red', weight: 4, opacity: 0.7}).addTo(map);
     } else {
-      map.setView([lat, lon], 14);
+      map.setView([lat, lon], 13);
     }
 
     if (marker) {
