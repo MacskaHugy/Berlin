@@ -1,49 +1,37 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background-color: #000;
-  color: #fff;
+  background: #f2f2f2;
   text-align: center;
   padding: 20px;
 }
 
 h1 {
-  color: #fff;
-  margin-bottom: 20px;
+  color: #333;
 }
 
 button {
-  background: #1e90ff;
+  background: #0066cc;
   color: white;
-  padding: 14px 24px;
+  padding: 12px 20px;
   font-size: 16px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 10px;
-  box-shadow: 0 0 10px rgba(30, 144, 255, 0.5);
 }
 
 button:hover {
-  background: #0f66c1;
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(30, 144, 255, 0.7);
+  background: #004999;
 }
 
 #status {
   margin-top: 20px;
   font-weight: bold;
-  font-size: 18px;
-  transition: color 0.3s ease;
 }
 
 #map {
   margin: 20px auto;
   height: 400px;
   max-width: 600px;
-  width: 100%;
-  border: 2px solid #444;
+  border: 2px solid #ccc;
   border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
