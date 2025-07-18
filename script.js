@@ -8,7 +8,7 @@ const wallCoords = [
 let map, marker;
 
 function haversine(lat1, lon1, lat2, lon2) {
-  const R = 6371000; // Föld sugara méterben
+  const R = 6371000;
   const toRad = deg => deg * Math.PI / 180;
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
@@ -37,6 +37,14 @@ function determineSide(lat, lon) {
   return { side, distance: minDist };
 }
 
+function getMarkerColor(side) {
+  switch (side) {
+    case "Nyugat-Berlin": return "blue";
+    case "Kelet-Berlin": return "red";
+    default: return "gray";
+  }
+}
+
 function getLocation() {
   const status = document.getElementById("status");
 
@@ -52,6 +60,9 @@ function getLocation() {
     const lon = position.coords.longitude;
     const { side, distance } = determineSide(lat, lon);
 
+    let color = getMarkerColor(side);
+    status.style.color = color;
+
     if (side === "Nem-Berlin") {
       status.textContent = `📍 Jelenlegi hely: Nem-Berlin (${distance.toFixed(1)} m-re a fal közelétől).`;
     } else {
@@ -66,10 +77,24 @@ function getLocation() {
     if (marker) {
       marker.setLatLng([lat, lon]);
     } else {
-      marker = L.marker([lat, lon]).addTo(map);
+      marker = L.circleMarker([lat, lon], {
+        radius: 10,
+        color: color,
+        fillColor: color,
+        fillOpacity: 0.9
+      }).addTo(map);
+    }
+
+    // Szín frissítése, ha már volt marker
+    if (marker.setStyle) {
+      marker.setStyle({
+        color: color,
+        fillColor: color
+      });
     }
 
   }, (error) => {
     status.textContent = `Hiba a helymeghatározás során: ${error.message}`;
+    status.style.color = 'orange';
   });
 }
