@@ -1,37 +1,43 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #f2f2f2;
+  background-color: #000;
+  color: #fff;
   text-align: center;
   padding: 20px;
 }
 
 h1 {
-  color: #333;
+  color: #fff;
 }
 
 button {
-  background: #0066cc;
+  background: #1e90ff;
   color: white;
-  padding: 12px 20px;
+  padding: 14px 24px;
   font-size: 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
 }
 
 button:hover {
-  background: #004999;
+  background: #0f66c1;
 }
 
 #status {
   margin-top: 20px;
   font-weight: bold;
+  font-size: 18px;
 }
 
 #map {
   margin: 20px auto;
   height: 400px;
   max-width: 600px;
-  border: 2px solid #ccc;
+  border: 2px solid #444;
   border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
