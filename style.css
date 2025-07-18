@@ -8,6 +8,7 @@ body {
 
 h1 {
   color: #fff;
+  margin-bottom: 20px;
 }
 
 button {
@@ -18,18 +19,22 @@ button {
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
   margin-top: 10px;
+  box-shadow: 0 0 10px rgba(30, 144, 255, 0.5);
 }
 
 button:hover {
   background: #0f66c1;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(30, 144, 255, 0.7);
 }
 
 #status {
   margin-top: 20px;
   font-weight: bold;
   font-size: 18px;
+  transition: color 0.3s ease;
 }
 
 #map {
