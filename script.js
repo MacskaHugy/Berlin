@@ -8,7 +8,7 @@ const wallCoords = [
 let map, marker;
 
 function haversine(lat1, lon1, lat2, lon2) {
-  const R = 6371000;
+  const R = 6371000; // Föld sugara méterben
   const toRad = deg => deg * Math.PI / 180;
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
@@ -27,6 +27,10 @@ function determineSide(lat, lon) {
       minDist = dist;
       closest = { wallLat, wallLon };
     }
+  }
+
+  if (minDist > 10000) {
+    return { side: "Nem-Berlin", distance: minDist };
   }
 
   const side = lon < closest.wallLon ? "Nyugat-Berlin" : "Kelet-Berlin";
@@ -48,7 +52,11 @@ function getLocation() {
     const lon = position.coords.longitude;
     const { side, distance } = determineSide(lat, lon);
 
-    status.textContent = `📍 Jelenlegi hely: ${side}, ${distance.toFixed(1)} méterre a falhoz legközelebbi ponttól.`;
+    if (side === "Nem-Berlin") {
+      status.textContent = `📍 Jelenlegi hely: Nem-Berlin (${distance.toFixed(1)} m-re a fal közelétől).`;
+    } else {
+      status.textContent = `📍 Jelenlegi hely: ${side}, ${distance.toFixed(1)} m-re a falhoz legközelebbi ponttól.`;
+    }
 
     if (!map) {
       map = L.map('map').setView([lat, lon], 14);
