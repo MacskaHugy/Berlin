@@ -1,0 +1,37 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f2f2f2;
+  text-align: center;
+  padding: 20px;
+}
+
+h1 {
+  color: #333;
+}
+
+button {
+  background: #0066cc;
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #004999;
+}
+
+#status {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+#map {
+  margin: 20px auto;
+  height: 400px;
+  max-width: 600px;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+}
